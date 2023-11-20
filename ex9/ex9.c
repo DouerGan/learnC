@@ -1,5 +1,9 @@
 #include <stdio.h>
-
+union Name
+{
+	char characters[4];
+	int integer;
+};
 int main(int argc , char * argv[])
 {
 	int numbers[4] = {0};
@@ -39,8 +43,11 @@ int main(int argc , char * argv[])
 	printf("another each : %c %c %c %c \n",
 		another[0],another[1],
 		another[2],another[3]);
-	int a = -2035569840;
-	printf("test : %s",a);
+	///////////////////////////////////////////////////////////////////////////////////
+	union Name myname = {.characters = "cjq"};
+	printf("%s \n",myname.characters);
+	printf("%X \n",myname.integer);
+
 	return 0;
 
 }

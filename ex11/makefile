@@ -1,9 +1,12 @@
 CFLAGS := -Wall -g
-file := ex6
-all: $(file)
-$(file): $(file).c
-	gcc $(CFLAGS) $(file).c -o $(file)
-run: $(file)
-	./$(file)
+TARGET := ex11
+all: $(TARGET)
+$(TARGET): $(TARGET).c
+	gcc $(CFLAGS) $^ -o $@
+run: $(TARGET)
+	./$(TARGET)
 clean:
-	find -name "*$(file)*" -not -name "$(file).c" -exec rm -rf {} \;
+	find -name "*$(TARGET)*" -not -name "$(TARGET).c" -exec rm -rf {} \;
+rebuild:
+	make clean
+	make

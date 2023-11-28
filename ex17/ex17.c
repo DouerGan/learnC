@@ -5,7 +5,7 @@
 #include <string.h>
 
 #define MAX_DATA 512
-#define MAX_ROWS 100
+#define MAX_ROW 100
 
 struct Address {
     int id;
@@ -15,7 +15,7 @@ struct Address {
 };
 
 struct Database {
-    struct Address rows[MAX_ROWS];
+    struct Address rows[MAX_ROW];
 };
 
 struct Connection {
@@ -28,7 +28,7 @@ void die(const char* message)
     if(errno){
         perror(message);
     } else {
-        printf("ERROR: %s \n",message);
+        printf("APPLICATION ERROR: %s. \n",message);
     }
     exit(1);
 }
@@ -40,7 +40,28 @@ void Address_print(struct Address* addr)
 
 void Database_load(struct Connection* conn)
 {
-    int rc = fread(conn->db ,sizeof(struct Database) ,1 ,conn->file);
-    if(rc != 1) die("Failed to load database");
+    int rc = fread(conn->db,sizeof(struct Database),1,conn->file);
+    if(rc != 1) die("Failed to load database.\n");
 }
 
+struct Connection* Database_open(const char *filename,char mode)
+{
+    struct Connection* conn = malloc(sizeof(struct Connection));
+    if(conn == NULL) die("MEMORY ERROR");
+
+    conn->db = malloc(sizeof(struct Database));
+    if(conn->db == NULL) die("MEMORY ERROR");
+
+    if(mode == 'c'){
+        conn->file = fopen(filename,"w");
+    }else {
+        conn->file = fopen(filename,"r+");
+
+        if(conn->file) {
+            Database_load(conn);
+        }
+
+    }
+    if(conn->file == NULL) die("Failed to open the file");
+    return conn;
+}

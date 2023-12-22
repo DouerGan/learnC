@@ -65,3 +65,23 @@ struct Connection* Database_open(const char *filename,char mode)
     if(conn->file == NULL) die("Failed to open the file");
     return conn;
 }
+
+void Database_close(struct Connection *conn)
+{
+    if(conn){
+        if(conn->file) fclose(conn->file);
+        if(conn->db) free(conn->db);
+        free(conn);
+    }
+}
+
+void Database_write(struct Connection *conn)
+{
+    rewind(conn->file); //将指针移动到文件开头
+
+    int rc = fwrite(conn->db,sizeof(struct Database),1,conn->file);
+    if(rc != 1) die("Failed to load database");
+
+    rc = fflush(conn->file);
+    if(rc == -1) die()
+}
